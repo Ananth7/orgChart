@@ -2,6 +2,8 @@ package personio.example.demo.api;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import personio.example.demo.service.OrgChartService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,24 +26,34 @@ public class OrgChartController {
     @Autowired
     private final OrgChartService orgChartService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrgChartController.class);
+
     @PostMapping("/api/v1/postOrgChart")
-    public ResponseEntity<Optional<OrgChart>> postOrgChart(@NonNull @RequestBody CreateOrgChartRequest createOrgChartRequest) throws URISyntaxException {
-        CreateOrgResponse orgChart = orgChartService.createOrgChart(createOrgChartRequest);
+    @ResponseBody
+    public ResponseEntity<CreateOrgResponse> postOrgChart(@NonNull @RequestBody Map<String, String> createOrgChartRequest) throws URISyntaxException {
+
+        for (String key: createOrgChartRequest.keySet())
+            LOGGER.info("Got request {}: {}", key, createOrgChartRequest.get(key));
+        CreateOrgResponse orgChart = orgChartService.createOrgChart(new CreateOrgChartRequest(createOrgChartRequest));
         if (orgChart.getOrgChart().isPresent()) {
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(orgChart.getOrgChart()).toUri();
-            return ResponseEntity.created(uri).body(orgChart.getOrgChart());
+            LOGGER.info("Org chart successfully created. {}", orgChart.getOrgChart());
+            return ResponseEntity.created(uri).body(orgChart);
         } else {
-            return ResponseEntity.notFound().build();
+            LOGGER.info("Error in creating org chart. {}", orgChart.getMessage());
+            return ResponseEntity.badRequest().body(orgChart);
         }
     }
 
     @GetMapping("/api/v1/getOrgChart")
+    @ResponseBody
     public ResponseEntity<OrgChart> getOrgChart() {
 //        if (valid) return orgChartService.getOrgChart();
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/api/v1/getManagers")
+    @ResponseBody
     public ResponseEntity<GetManagersResponse> getManagers(@RequestParam("employee") String employee) {
         //        if (valid) return orgChartService.getManagers();
         return ResponseEntity.notFound().build();
