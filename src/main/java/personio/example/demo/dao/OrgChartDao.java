@@ -6,7 +6,7 @@ import personio.example.demo.response.CreateOrgResponse;
 import personio.example.demo.response.GetManagersResponse;
 
 public interface OrgChartDao {
-    public CreateOrgResponse createOrg(CreateOrgChartRequest createOrgChartRequest);
+    public OrgChart createOrg(CreateOrgChartRequest createOrgChartRequest);
 
     public OrgChart getOrgChart();
 
