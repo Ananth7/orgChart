@@ -4,10 +4,10 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import personio.example.demo.dao.OrgChartDao;
-import personio.example.demo.model.OrgChart;
 import personio.example.demo.request.CreateOrgChartRequest;
 import personio.example.demo.request.OrgChartValidationState;
 import personio.example.demo.response.CreateOrgResponse;
+import personio.example.demo.model.OrgChart;
 import personio.example.demo.validations.ValidationUtils;
 
 import java.util.Optional;
@@ -19,10 +19,11 @@ public class OrgChartService {
     private OrgChartDao orgChartDao;
 
     public CreateOrgResponse createOrgChart(@NonNull CreateOrgChartRequest orgChartRequest) {
-        OrgChartValidationState validationState = ValidationUtils.validateOrgChartRequest(orgChartRequest);
+        OrgChart orgChart = new OrgChart(orgChartRequest);
+        OrgChartValidationState validationState = ValidationUtils.validateOrgChartRequest(orgChartRequest, orgChart);
         if (validationState.equals(OrgChartValidationState.VALID)) {
-            OrgChart org = orgChartDao.createOrg(orgChartRequest);
-            return new CreateOrgResponse(Optional.ofNullable(org), "Successfully created org");
+            orgChartDao.persistOrg(orgChart);
+            return new CreateOrgResponse(Optional.of(orgChart.getStructuredOrgChart(orgChart.getBoss()).toString()), "Successfully created org");
         } else {
             if (validationState.equals(OrgChartValidationState.INVALID_LOOP)) return new CreateOrgResponse(Optional.empty(), "Input JSON had a cyclic dependency. Org creation failed!");
             else if (validationState.equals(OrgChartValidationState.INVALID_MULTIPLE_ROOTS)) return new CreateOrgResponse(Optional.empty(), "Input JSON had multiple roots. Org creation failed!");
@@ -32,7 +33,8 @@ public class OrgChartService {
     }
 
     public OrgChart getOrgChart() {
-        return new OrgChart();
+//        return new OrgChart();
+        return null;
     }
 
 }

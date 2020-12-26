@@ -2,6 +2,7 @@ package personio.example.demo.api;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -30,7 +32,7 @@ public class OrgChartController {
 
     @PostMapping("/api/v1/postOrgChart")
     @ResponseBody
-    public ResponseEntity<CreateOrgResponse> postOrgChart(@NonNull @RequestBody Map<String, String> createOrgChartRequest) throws URISyntaxException {
+    public ResponseEntity<String> postOrgChart(@NonNull @RequestBody Map<String, String> createOrgChartRequest) throws URISyntaxException {
 
         for (String key: createOrgChartRequest.keySet())
             LOGGER.info("Got request {}: {}", key, createOrgChartRequest.get(key));
@@ -38,16 +40,16 @@ public class OrgChartController {
         if (orgChart.getOrgChart().isPresent()) {
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(orgChart.getOrgChart()).toUri();
             LOGGER.info("Org chart successfully created. {}", orgChart.getOrgChart());
-            return ResponseEntity.created(uri).body(orgChart);
+            return ResponseEntity.created(uri).body(orgChart.getOrgChart().toString());
         } else {
             LOGGER.info("Error in creating org chart. {}", orgChart.getMessage());
-            return ResponseEntity.badRequest().body(orgChart);
+            return ResponseEntity.badRequest().body(orgChart.getOrgChart().toString());
         }
     }
 
     @GetMapping("/api/v1/getOrgChart")
     @ResponseBody
-    public ResponseEntity<OrgChart> getOrgChart() {
+    public ResponseEntity<Map<String, Set<String>>> getOrgChart() {
 //        if (valid) return orgChartService.getOrgChart();
         return ResponseEntity.notFound().build();
     }

@@ -2,15 +2,14 @@ package personio.example.demo.dao;
 
 import org.springframework.stereotype.Repository;
 import personio.example.demo.model.OrgChart;
-import personio.example.demo.request.CreateOrgChartRequest;
 import personio.example.demo.response.GetManagersResponse;
 
 @Repository
 public class OrgChartSQLDao implements OrgChartDao {
-
     @Override
-    public OrgChart createOrg(CreateOrgChartRequest createOrgChartRequest) {
-        return null;
+    public OrgChart persistOrg(OrgChart orgChart) {
+        // store in sql
+        return orgChart;
     }
 
     @Override
