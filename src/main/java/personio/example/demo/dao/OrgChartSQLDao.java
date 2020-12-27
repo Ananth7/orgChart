@@ -4,7 +4,9 @@ import org.springframework.stereotype.Repository;
 import personio.example.demo.model.OrgChart;
 import personio.example.demo.response.GetManagersResponse;
 import personio.example.demo.sql.QueryExecutor;
+import personio.example.demo.utils.Utils;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
@@ -31,12 +33,25 @@ public class OrgChartSQLDao implements OrgChartDao {
     }
 
     @Override
-    public OrgChart getOrgChart() {
-        return null;
-    }
-
-    @Override
-    public GetManagersResponse getManagerForEmployee(String name) {
-        return null;
+    public GetManagersResponse getManagersForEmployee(String name) {
+        GetManagersResponse response = new GetManagersResponse();
+        try {
+            ResultSet resultSet = QueryExecutor.execReads("select * from users where reportee = '" + name + "';");
+            String manager = "";
+            while (resultSet.next()) {
+                manager = resultSet.getString("employee");
+                response.setManager(manager);
+            }
+            resultSet.getStatement().getConnection().close();
+            ResultSet resultSetSkipManager = QueryExecutor.execReads("select * from users where reportee = '" + manager + "';");
+            while (resultSetSkipManager.next()) {
+                String skipManager = resultSetSkipManager.getString("employee");
+                response.setSkipLevelManager(skipManager);
+            }
+            resultSetSkipManager.getStatement().getConnection().close();
+        } catch (SQLException | ClassNotFoundException e) {
+            Utils.printStackTrace(e);
+        }
+        return response;
     }
 }

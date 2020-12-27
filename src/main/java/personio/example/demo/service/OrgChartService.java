@@ -8,6 +8,7 @@ import personio.example.demo.request.CreateOrgChartRequest;
 import personio.example.demo.request.OrgChartValidationState;
 import personio.example.demo.response.CreateOrgResponse;
 import personio.example.demo.model.OrgChart;
+import personio.example.demo.response.GetManagersResponse;
 import personio.example.demo.sql.QueryExecutor;
 import personio.example.demo.utils.Utils;
 import personio.example.demo.validations.ValidationUtils;
@@ -32,7 +33,7 @@ public class OrgChartService {
         OrgChartValidationState validationState = ValidationUtils.validateOrgChartRequest(orgChartRequest, orgChart);
         if (validationState.equals(OrgChartValidationState.VALID)) {
             if (!orgChartDao.persistOrg(orgChart)) System.out.println("Error in persisting org");
-            String s = orgChart.getStructuredOrgChart(orgChart.getBoss()).toString();//.replaceAll("\n", "").replaceAll("\\\\", "/");
+            String s = orgChart.getStructuredOrgChart(orgChart.getBoss()).toString();
             System.out.println(s);
             return new CreateOrgResponse(Optional.of(s), "Successfully created org");
 
@@ -61,6 +62,10 @@ public class OrgChartService {
         CreateOrgChartRequest createOrgChartRequest = new CreateOrgChartRequest(employeeRelationships);
         orgChartCache = new OrgChart(createOrgChartRequest);
         return orgChartCache.getStructuredOrgChart(orgChartCache.getBoss()).toString();
+    }
+
+    public GetManagersResponse getManagersForEmployee(String name) {
+        return orgChartDao.getManagersForEmployee(name);
     }
 
 }

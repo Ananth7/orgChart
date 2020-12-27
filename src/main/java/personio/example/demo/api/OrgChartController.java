@@ -56,8 +56,7 @@ public class OrgChartController {
     @GetMapping("/api/v1/getManagers")
     @ResponseBody
     public ResponseEntity<GetManagersResponse> getManagers(@RequestParam("employee") String employee) {
-        //        if (valid) return orgChartService.getManagers();
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(orgChartService.getManagersForEmployee(employee));
     }
 
 }
