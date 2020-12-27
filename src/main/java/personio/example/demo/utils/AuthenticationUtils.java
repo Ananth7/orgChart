@@ -2,8 +2,6 @@ package personio.example.demo.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import personio.example.demo.dao.AuthenticationSQLDao;
-import personio.example.demo.model.Admin;
-import personio.example.demo.model.Session;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
