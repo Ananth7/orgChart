@@ -2,19 +2,13 @@ package personio.example.demo.model;
 
 import lombok.Data;
 import lombok.NonNull;
-import org.json.JSONArray;
 import personio.example.demo.request.CreateOrgChartRequest;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.json.JSONObject;
-import personio.example.demo.response.CreateOrgResponse;
-import personio.example.demo.sql.QueryExecutor;
-import personio.example.demo.utils.Utils;
 
 
 /**
@@ -72,7 +66,7 @@ public class OrgChart {
         return orgGraph;
     }
 
-    public boolean validateForMultipleComponents(@NonNull CreateOrgChartRequest orgChartRequest) {
+    public boolean validateForMultipleComponents() {
         setParents();
         for (String employee: orgGraph.keySet()) {
             for (String reportee: orgGraph.get(employee)) {

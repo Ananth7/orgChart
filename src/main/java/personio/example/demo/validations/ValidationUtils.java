@@ -9,8 +9,7 @@ public class ValidationUtils {
     public static OrgChartValidationState validateOrgChartRequest(@NonNull CreateOrgChartRequest orgChartRequest, OrgChart orgChart) {
 
         if (!orgChart.validateForLoops(orgChartRequest)) return OrgChartValidationState.INVALID_LOOP;
-//        validateForMultipleRoots(orgChartRequest);
-        if (!orgChart.validateForMultipleComponents(orgChartRequest)) return OrgChartValidationState.INVALID_DISCONNECTED_ORG;
+        if (!orgChart.validateForMultipleComponents()) return OrgChartValidationState.INVALID_DISCONNECTED_ORG;
         return OrgChartValidationState.VALID;
     }
 
