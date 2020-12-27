@@ -8,16 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import personio.example.demo.model.Session;
 import personio.example.demo.request.CreateOrgChartRequest;
 import personio.example.demo.response.CreateOrgResponse;
 import personio.example.demo.response.GetManagersResponse;
 import personio.example.demo.service.AuthenticationService;
 import personio.example.demo.service.OrgChartService;
-import personio.example.demo.utils.AuthenticationUtils;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 @RestController
@@ -62,10 +59,10 @@ public class OrgChartController {
 
     @GetMapping("/api/v1/getManagers")
     @ResponseBody
-    public ResponseEntity<GetManagersResponse> getManagers(@RequestParam("employee") String employee,
+    public ResponseEntity<String> getManagers(@RequestParam("employee") String employee,
                                                            @RequestHeader(name = "sessionId", required = true) String sessionId) {
-        if (! authenticationService.authenticateSession(sessionId)) return ResponseEntity.badRequest().body(null);
-        return ResponseEntity.ok(orgChartService.getManagersForEmployee(employee));
+        if (! authenticationService.authenticateSession(sessionId)) return ResponseEntity.badRequest().body("Unauthorized attempt");
+        return ResponseEntity.ok(orgChartService.getManagersForEmployee(employee).toString());
     }
 
 }
