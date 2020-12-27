@@ -2,6 +2,7 @@ package personio.example.demo.model;
 
 import lombok.Data;
 import lombok.NonNull;
+import org.json.JSONArray;
 import personio.example.demo.request.CreateOrgChartRequest;
 
 import java.sql.ResultSet;
@@ -33,12 +34,14 @@ public class OrgChart {
         System.out.println("Employee = " + employee);
         JSONObject org = new JSONObject();
         if (! orgGraph.containsKey(employee)) {
-            org.put(employee, "");
+            org.put(employee, new JSONObject());
             return org;
         }
+        JSONObject reporteeOrg = new JSONObject();
         for (String reportee: orgGraph.get(employee)) {
-            org.append(employee, getStructuredOrgChart(reportee));
+            reporteeOrg.put(reportee, getStructuredOrgChart(reportee).get(reportee));
         }
+        org.put(employee, reporteeOrg);
         return org;
     }
 
