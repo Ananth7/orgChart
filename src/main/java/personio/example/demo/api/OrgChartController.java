@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import personio.example.demo.model.Session;
 import personio.example.demo.request.CreateOrgChartRequest;
-import personio.example.demo.request.PostOrgRequest;
 import personio.example.demo.response.CreateOrgResponse;
 import personio.example.demo.response.GetManagersResponse;
 import personio.example.demo.service.AuthenticationService;
@@ -35,14 +34,15 @@ public class OrgChartController {
 
     @PostMapping("/api/v1/postOrgChart")
     @ResponseBody
-    public ResponseEntity<String> postOrgChart(@NonNull @RequestBody PostOrgRequest postOrgRequest) {
+    public ResponseEntity<String> postOrgChart(@NonNull @RequestBody Map<String, String> createOrgChartRequest,
+                                               @RequestHeader(name = "sessionId", required = true) String sessionId) {
 
-        if (! authenticationService.authenticateSession(postOrgRequest.getSession())) return ResponseEntity.badRequest().body("Unauthorized attempt");
+        if (! authenticationService.authenticateSession(sessionId)) return ResponseEntity.badRequest().body("Unauthorized attempt");
 
-        for (String key: postOrgRequest.getCreateOrgChartRequest().keySet())
-            LOGGER.info("Got request {}: {}", key, postOrgRequest.getCreateOrgChartRequest().get(key));
+        for (String key: createOrgChartRequest.keySet())
+            LOGGER.info("Got request {}: {}", key, createOrgChartRequest.get(key));
         CreateOrgResponse orgChart
-                = orgChartService.createOrgChart(new CreateOrgChartRequest(postOrgRequest.getCreateOrgChartRequest()));
+                = orgChartService.createOrgChart(new CreateOrgChartRequest(createOrgChartRequest));
         if (orgChart.getOrgChart().isPresent()) {
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(orgChart.getOrgChart()).toUri();
             LOGGER.info("Org chart successfully created. {}", orgChart.getOrgChart());
@@ -55,16 +55,16 @@ public class OrgChartController {
 
     @GetMapping("/api/v1/getOrgChart")
     @ResponseBody
-    public ResponseEntity<String> getOrgChart(@NonNull @RequestBody Session session) {
-        if (! authenticationService.authenticateSession(session)) return ResponseEntity.badRequest().body("Unauthorized attempt");
+    public ResponseEntity<String> getOrgChart(@RequestHeader(name = "sessionId", required = true) String sessionId) {
+        if (! authenticationService.authenticateSession(sessionId)) return ResponseEntity.badRequest().body("Unauthorized attempt");
         return ResponseEntity.ok(orgChartService.getOrgChartFromDB());
     }
 
     @GetMapping("/api/v1/getManagers")
     @ResponseBody
     public ResponseEntity<GetManagersResponse> getManagers(@RequestParam("employee") String employee,
-                                                           @NonNull @RequestBody Session session) {
-        if (! authenticationService.authenticateSession(session)) return ResponseEntity.badRequest().body(null);
+                                                           @RequestHeader(name = "sessionId", required = true) String sessionId) {
+        if (! authenticationService.authenticateSession(sessionId)) return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok(orgChartService.getManagersForEmployee(employee));
     }
 

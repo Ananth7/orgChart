@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import personio.example.demo.dao.AuthenticationDao;
 import personio.example.demo.model.Admin;
-import personio.example.demo.model.Session;
 
 import java.util.Optional;
 
@@ -22,8 +21,8 @@ public class AuthenticationService {
         return authenticationDao.authenticateUser(admin);
     }
 
-    public boolean authenticateSession(Session session) {
-        return authenticationDao.authenticateSession(session);
+    public boolean authenticateSession(String sessionId) {
+        return authenticationDao.authenticateSession(sessionId);
     }
 
 

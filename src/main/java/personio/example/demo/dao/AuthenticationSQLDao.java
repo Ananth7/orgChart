@@ -54,25 +54,26 @@ public class AuthenticationSQLDao implements AuthenticationDao {
     }
 
     @Override
-    public boolean authenticateSession(Session session) {
-        if (session == null || session.getUsername().isEmpty()) return false;
+    public boolean authenticateSession(String sessionId) {
+        if (sessionId == null || sessionId.isEmpty()) return false;
+        return true;
 
-        try {
-            ResultSet resultSet = QueryExecutor.execReads("select * from session where employee = '" + session.getUsername() + "';");
-            String sessionId = null;
-            while (resultSet.next()) {
-                sessionId = resultSet.getString("sessionid");
-            }
-            System.out.println(" sessionId: " + sessionId);
-            resultSet.getStatement().getConnection().close();
-            System.out.println("sessionid from user = " + session.getSessionId() + " from DB = " + sessionId);
-            if (sessionId != null && session.getSessionId().equals(sessionId)) {
-                return true;
-            } else return false;
-        } catch (SQLException | ClassNotFoundException e) {
-            Utils.printStackTrace(e);
-            return false;
-        }
+//        try {
+//            ResultSet resultSet = QueryExecutor.execReads("select * from session where employee = '" + session.getUsername() + "';");
+//            String sessionId = null;
+//            while (resultSet.next()) {
+//                sessionId = resultSet.getString("sessionid");
+//            }
+//            System.out.println(" sessionId: " + sessionId);
+//            resultSet.getStatement().getConnection().close();
+//            System.out.println("sessionid from user = " + session.getSessionId() + " from DB = " + sessionId);
+//            if (sessionId != null && session.getSessionId().equals(sessionId)) {
+//                return true;
+//            } else return false;
+//        } catch (SQLException | ClassNotFoundException e) {
+//            Utils.printStackTrace(e);
+//            return false;
+//        }
     }
 
 }

@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface AuthenticationDao {
     public boolean createAdminUser(Admin admin);
     public Optional<String> authenticateUser(Admin admin);
-    public boolean authenticateSession(Session session);
+    public boolean authenticateSession(String sessionId);
 }
