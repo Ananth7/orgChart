@@ -8,15 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import personio.example.demo.model.CreateAdmin;
-import personio.example.demo.request.CreateOrgChartRequest;
-import personio.example.demo.response.CreateOrgResponse;
+import personio.example.demo.model.Admin;
 import personio.example.demo.service.AuthenticationService;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -28,7 +22,7 @@ public class AuthenticationController {
 
     @PostMapping("/api/v1/createAdminUser")
     @ResponseBody
-    public ResponseEntity<String> createAdminUser(@NonNull @RequestBody CreateAdmin admin) {
+    public ResponseEntity<String> createAdminUser(@NonNull @RequestBody Admin admin) {
         boolean adminUser = authenticationService.createNewAdminUser(admin);
         if (adminUser) return ResponseEntity.ok("User created");
         else return ResponseEntity.badRequest().body("Error in creating user");
@@ -36,7 +30,7 @@ public class AuthenticationController {
 
     @PostMapping("/api/v1/authenticateUser")
     @ResponseBody
-    public ResponseEntity<String> authenticateUser(@NonNull @RequestBody CreateAdmin admin) {
+    public ResponseEntity<String> authenticateUser(@NonNull @RequestBody Admin admin) {
         Optional<String> session = authenticationService.authenticateUser(admin);
         if (session.isPresent()) return ResponseEntity.ok(session.get());
         else return ResponseEntity.badRequest().body("Error in authenticating user");

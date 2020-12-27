@@ -1,7 +1,8 @@
 package personio.example.demo.dao;
 
 import org.springframework.stereotype.Repository;
-import personio.example.demo.model.CreateAdmin;
+import personio.example.demo.model.Admin;
+import personio.example.demo.model.Session;
 import personio.example.demo.sql.QueryExecutor;
 import personio.example.demo.utils.AuthenticationUtils;
 import personio.example.demo.utils.Utils;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class AuthenticationSQLDao implements AuthenticationDao {
 
     @Override
-    public boolean createAdminUser(CreateAdmin admin) {
+    public boolean createAdminUser(Admin admin) {
         try {
             String addShowQuery = "insert into session (employee, password, sessionid) values ('"
                     + admin.getUsername() + "', '" + AuthenticationUtils.encrypt(admin.getPassword())
@@ -31,7 +32,7 @@ public class AuthenticationSQLDao implements AuthenticationDao {
     }
 
     @Override
-    public Optional<String> authenticateUser(CreateAdmin admin) {
+    public Optional<String> authenticateUser(Admin admin) {
         if (admin.getUsername().isEmpty()) return Optional.empty();
 
         try {
@@ -51,4 +52,27 @@ public class AuthenticationSQLDao implements AuthenticationDao {
             return Optional.empty();
         }
     }
+
+    @Override
+    public boolean authenticateSession(Session session) {
+        if (session == null || session.getUsername().isEmpty()) return false;
+
+        try {
+            ResultSet resultSet = QueryExecutor.execReads("select * from session where employee = '" + session.getUsername() + "';");
+            String sessionId = null;
+            while (resultSet.next()) {
+                sessionId = resultSet.getString("sessionid");
+            }
+            System.out.println(" sessionId: " + sessionId);
+            resultSet.getStatement().getConnection().close();
+            System.out.println("sessionid from user = " + session.getSessionId() + " from DB = " + sessionId);
+            if (sessionId != null && session.getSessionId().equals(sessionId)) {
+                return true;
+            } else return false;
+        } catch (SQLException | ClassNotFoundException e) {
+            Utils.printStackTrace(e);
+            return false;
+        }
+    }
+
 }

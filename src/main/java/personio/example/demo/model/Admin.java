@@ -3,7 +3,7 @@ package personio.example.demo.model;
 import lombok.Data;
 
 @Data
-public class CreateAdmin {
+public class Admin {
     private String username;
     private String password;
 }

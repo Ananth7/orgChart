@@ -1,11 +1,20 @@
 package personio.example.demo.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import personio.example.demo.dao.AuthenticationSQLDao;
+import personio.example.demo.model.Admin;
+import personio.example.demo.model.Session;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class AuthenticationUtils {
+
+    @Autowired
+    AuthenticationSQLDao authenticationDao;
+
     private static byte[] getSHA(String input) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         return md.digest(input.getBytes(StandardCharsets.UTF_8));
@@ -23,4 +32,5 @@ public class AuthenticationUtils {
     public static String encrypt(String input) throws NoSuchAlgorithmException {
         return toHexString(getSHA(input));
     }
+
 }
