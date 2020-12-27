@@ -4,11 +4,16 @@ import lombok.Data;
 import lombok.NonNull;
 import personio.example.demo.request.CreateOrgChartRequest;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.json.JSONObject;
+import personio.example.demo.response.CreateOrgResponse;
+import personio.example.demo.sql.QueryExecutor;
+import personio.example.demo.utils.Utils;
 
 
 /**
@@ -18,7 +23,7 @@ import org.json.JSONObject;
  */
 @Data
 public class OrgChart {
-    Map<String, Set<String>> orgGraph = new HashMap<>();
+    Map<String, Set<String>> orgGraph;
     Map<String, String> parent;
     Map<String, Integer> inDegree;
     Set<String> employees;

@@ -11,8 +11,6 @@ import java.sql.SQLException;
 public class OrgChartSQLDao implements OrgChartDao {
     @Override
     public boolean persistOrg(OrgChart orgChart) {
-        // store in sql
-
         try {
             System.out.println("drop table if exists users");
             QueryExecutor.execWrites("drop table if exists users");

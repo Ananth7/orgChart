@@ -49,8 +49,8 @@ public class OrgChartController {
 
     @GetMapping("/api/v1/getOrgChart")
     @ResponseBody
-    public ResponseEntity<Map<String, Set<String>>> getOrgChart() {
-        return null;
+    public ResponseEntity<String> getOrgChart() {
+        return ResponseEntity.ok(orgChartService.getOrgChartFromDB());
     }
 
     @GetMapping("/api/v1/getManagers")

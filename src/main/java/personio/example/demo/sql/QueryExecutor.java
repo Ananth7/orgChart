@@ -26,7 +26,6 @@ public class QueryExecutor{
     public static ResultSet execReads(String sqlQuery) throws SQLException, ClassNotFoundException {
         Statement stmt = createStatement();
         ResultSet rs=stmt.executeQuery(sqlQuery);
-        stmt.getConnection().close();
         return rs;
     }
 
