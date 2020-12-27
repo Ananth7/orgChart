@@ -40,18 +40,17 @@ public class OrgChartController {
         if (orgChart.getOrgChart().isPresent()) {
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(orgChart.getOrgChart()).toUri();
             LOGGER.info("Org chart successfully created. {}", orgChart.getOrgChart());
-            return ResponseEntity.created(uri).body(orgChart.getOrgChart().toString());
+            return ResponseEntity.created(uri).body(orgChart.getOrgChart().get());
         } else {
             LOGGER.info("Error in creating org chart. {}", orgChart.getMessage());
-            return ResponseEntity.badRequest().body(orgChart.getOrgChart().toString());
+            return ResponseEntity.badRequest().body(orgChart.getMessage());
         }
     }
 
     @GetMapping("/api/v1/getOrgChart")
     @ResponseBody
     public ResponseEntity<Map<String, Set<String>>> getOrgChart() {
-//        if (valid) return orgChartService.getOrgChart();
-        return ResponseEntity.notFound().build();
+        return null;
     }
 
     @GetMapping("/api/v1/getManagers")

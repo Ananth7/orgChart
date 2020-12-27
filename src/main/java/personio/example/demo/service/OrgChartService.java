@@ -23,7 +23,10 @@ public class OrgChartService {
         OrgChartValidationState validationState = ValidationUtils.validateOrgChartRequest(orgChartRequest, orgChart);
         if (validationState.equals(OrgChartValidationState.VALID)) {
             orgChartDao.persistOrg(orgChart);
-            return new CreateOrgResponse(Optional.of(orgChart.getStructuredOrgChart(orgChart.getBoss()).toString()), "Successfully created org");
+            String s = orgChart.getStructuredOrgChart(orgChart.getBoss()).toString();//.replaceAll("\n", "").replaceAll("\\\\", "/");
+            System.out.println(s);
+            return new CreateOrgResponse(Optional.of(s), "Successfully created org");
+
         } else {
             if (validationState.equals(OrgChartValidationState.INVALID_LOOP)) return new CreateOrgResponse(Optional.empty(), "Input JSON had a cyclic dependency. Org creation failed!");
             else if (validationState.equals(OrgChartValidationState.INVALID_MULTIPLE_ROOTS)) return new CreateOrgResponse(Optional.empty(), "Input JSON had multiple roots. Org creation failed!");
@@ -33,8 +36,7 @@ public class OrgChartService {
     }
 
     public OrgChart getOrgChart() {
-//        return new OrgChart();
-        return null;
+        return orgChartDao.getOrgChart();
     }
 
 }
