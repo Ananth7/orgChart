@@ -2,14 +2,12 @@ package personio.example.demo.api;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import personio.example.demo.model.OrgChart;
 import personio.example.demo.request.CreateOrgChartRequest;
 import personio.example.demo.response.CreateOrgResponse;
 import personio.example.demo.response.GetManagersResponse;
@@ -18,8 +16,6 @@ import personio.example.demo.service.OrgChartService;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @AllArgsConstructor
