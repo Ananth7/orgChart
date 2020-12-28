@@ -18,19 +18,46 @@ import org.json.JSONObject;
  */
 @Data
 public class OrgChart {
+    /**
+     * orgGraph represent the structure of the org in a graph format. The key is the name of the employee
+     * and the value is a set of employees who report to him/her (reportees)
+     */
     Map<String, Set<String>> orgGraph;
+
+    /**
+     * this field is used in the Disjoint set union-find algorithm
+     */
     Map<String, String> parent;
+
+    /**
+     * This field keeps track of the indegree of each employee. The CEO (or) boss has no one above him so the indegree is 0
+     */
     Map<String, Integer> inDegree;
+
+    /**
+     * Set of all employees in the organization
+     */
     Set<String> employees;
+
+    /**
+     * The CEO
+     */
     String boss;
 
+    /**
+     * This method returns the org chart in the desired format.
+     * It makes use of DFS graph traversal algorithm to recursively build the output in the desired format.
+     */
     public JSONObject getStructuredOrgChart(String employee) {
         System.out.println("Employee = " + employee);
         JSONObject org = new JSONObject();
+
+        // base case
         if (! orgGraph.containsKey(employee)) {
             org.put(employee, new JSONObject());
             return org;
         }
+
         JSONObject reporteeOrg = new JSONObject();
         for (String reportee: orgGraph.get(employee)) {
             reporteeOrg.put(reportee, getStructuredOrgChart(reportee).get(reportee));
@@ -43,6 +70,10 @@ public class OrgChart {
         this.orgGraph = makeGraph(orgChartRequest);
     }
 
+    /**
+     * This method is used to build the graph.
+     * It also populates all the other necessary fields for the rest of the algorithms.
+     */
     private Map<String, Set<String>> makeGraph(@NonNull CreateOrgChartRequest orgChartRequest) {
         Map<String, Set<String>> orgGraph = new HashMap<>();
         employees = new HashSet<>();
@@ -66,6 +97,11 @@ public class OrgChart {
         return orgGraph;
     }
 
+    /**
+     * This method runs a union-find disjoint set algorithm on top of the built graph to identify
+     * the number of separate components in the graph.
+     * All connected components appear under the same disjoint set.
+     */
     public boolean validateForMultipleComponents() {
         setParents();
         for (String employee: orgGraph.keySet()) {
@@ -84,6 +120,9 @@ public class OrgChart {
         return count == employees.size();
     }
 
+    /**
+     * Utility method for Union-find
+     */
     private void setParents() {
         for (String employee: orgGraph.keySet()) {
             parent.put(employee, employee);
@@ -92,6 +131,11 @@ public class OrgChart {
         }
     }
 
+    /**
+     * This method uses graph coloring technique along with DFS to identify loops in the graph data structure.
+     * The way it does it by maintaining a stack and if a node in progress (GRAY) node comes up as a neighbour
+     * of the current nodes being processed. It means there is a cyclic dependency in the graph.
+     */
     private boolean isCyclic(@NonNull String employee,
                              @NonNull Map<String, VisitedState> visited) {
         if (visited.containsKey(employee) && visited.get(employee).equals(VisitedState.GRAY)) return true;
@@ -105,6 +149,9 @@ public class OrgChart {
         return false;
     }
 
+    /**
+     * Method to make use of isCyclic method and determine if there are any loops in the given createOrgRequest
+     */
     public boolean validateForLoops(@NonNull CreateOrgChartRequest orgChartRequest) {
         Map<String, VisitedState> visited = new HashMap<>();
         for (String employee: orgChartRequest.getEmployeeRelationships().keySet()) {
@@ -125,14 +172,20 @@ public class OrgChart {
         BLACK
     }
 
+    /**
+     * Methods for union-find algorithm
+     */
     private void union(String a, String b) {
         String parenta = findParent(a);
         String parentb = findParent(b);
         parent.put(parenta, parentb);
     }
 
+    /**
+     * Methods for union-find algorithm
+     */
     private String findParent(String a) {
-        while ( parent.get(a) != a) {
+        while (!parent.get(a).equals(a)) {
             a = parent.get(a);
         }
         return a;
