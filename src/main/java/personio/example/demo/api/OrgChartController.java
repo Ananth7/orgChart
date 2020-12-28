@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import personio.example.demo.request.CreateOrgChartRequest;
 import personio.example.demo.response.CreateOrgResponse;
-import personio.example.demo.response.GetManagersResponse;
 import personio.example.demo.service.AuthenticationService;
 import personio.example.demo.service.OrgChartService;
 

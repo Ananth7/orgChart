@@ -1,4 +1,4 @@
-package personio.example.demo;
+package personio.example.demo.api;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import personio.example.demo.api.AuthenticationController;
 import personio.example.demo.model.Admin;
 import personio.example.demo.service.AuthenticationService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
