@@ -1,25 +1,20 @@
 package personio.example.demo.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import personio.example.demo.model.Admin;
 import personio.example.demo.model.OrgChart;
 import personio.example.demo.request.CreateOrgChartRequest;
-import personio.example.demo.request.OrgChartValidationState;
 import personio.example.demo.response.CreateOrgResponse;
 import personio.example.demo.response.GetManagersResponse;
 import personio.example.demo.service.AuthenticationService;
 import personio.example.demo.service.OrgChartService;
-import personio.example.demo.validations.ValidationUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +22,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

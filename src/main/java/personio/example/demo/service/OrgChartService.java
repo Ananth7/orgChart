@@ -25,6 +25,13 @@ public class OrgChartService {
     @Autowired
     private OrgChartDao orgChartDao;
 
+    /**
+     * This cache is used to speed up GET queries on the org.
+     * This is write through cache, where the cache is updated on any update to the data being stored in the DB.
+     *
+     * When the application is restarted, the cache is lost. In this case, the cache is updated by reading from the DB,
+     * whenever the cache is empty.
+     */
     private OrgChart orgChartCache;
 
     public CreateOrgResponse createOrgChart(@NonNull CreateOrgChartRequest orgChartRequest) {
@@ -39,7 +46,6 @@ public class OrgChartService {
 
         } else {
             if (validationState.equals(OrgChartValidationState.INVALID_LOOP)) return new CreateOrgResponse(Optional.empty(), "Input JSON had a cyclic dependency. Org creation failed!");
-            else if (validationState.equals(OrgChartValidationState.INVALID_MULTIPLE_ROOTS)) return new CreateOrgResponse(Optional.empty(), "Input JSON had multiple roots. Org creation failed!");
             else if (validationState.equals(OrgChartValidationState.INVALID_DISCONNECTED_ORG)) return new CreateOrgResponse(Optional.empty(), "Input JSON had disconnected components. Org creation failed!");
             else return new CreateOrgResponse(Optional.empty(), "Unknown error while creating org chart!");
         }

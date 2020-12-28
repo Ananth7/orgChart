@@ -8,7 +8,6 @@ import personio.example.demo.utils.Utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 @Repository
 public class OrgChartSQLDao implements OrgChartDao {

@@ -1,6 +1,5 @@
 package personio.example.demo.validations;
 
-import lombok.NonNull;
 import personio.example.demo.model.OrgChart;
 import personio.example.demo.request.CreateOrgChartRequest;
 import personio.example.demo.request.OrgChartValidationState;
@@ -11,5 +10,4 @@ public class ValidationUtils {
         if (!orgChart.validateForMultipleComponents()) return OrgChartValidationState.INVALID_DISCONNECTED_ORG;
         return OrgChartValidationState.VALID;
     }
-
 }
