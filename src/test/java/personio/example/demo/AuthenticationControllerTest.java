@@ -16,6 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.hamcrest.Matchers.containsString;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -62,5 +64,30 @@ public class AuthenticationControllerTest {
                 .andExpect(content().string(containsString("Error in creating user")));
     }
 
+    @Test
+    public void authenticatingAValidSessionShouldSucceed() throws Exception {
+        String sessionId = UUID.randomUUID().toString();
+        Admin admin = new Admin(UUID.randomUUID().toString(), "password");
+        Mockito.when(authenticationService.authenticateUser(Mockito.any(Admin.class))).thenReturn(Optional.of(sessionId));
+        this.mockMvc.perform(post("/api/v1/authenticateUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(admin)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(sessionId)));
+    }
+
+    @Test
+    public void authenticatingAnInvalidSessionShouldFail() throws Exception {
+        String sessionId = UUID.randomUUID().toString();
+        Admin admin = new Admin(UUID.randomUUID().toString(), "password");
+        Mockito.when(authenticationService.authenticateUser(Mockito.any(Admin.class))).thenReturn(Optional.empty());
+        this.mockMvc.perform(post("/api/v1/authenticateUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(admin)))
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString("Error in authenticating user")));
+    }
 
 }
